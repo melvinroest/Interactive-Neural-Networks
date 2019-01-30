@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title></title>
+</head>
+<body>
+  <section id="content">
+    <h1>An Interactive Guide to the Wonderful World of Neural Networks</h1>
+    <p>Hello!</p>
+    <p>I decided to apply to OpenAI since I was encouraged that
+      you don't need a formal background in the field when you
+      apply as a machine learning fellow.</p>
+    <p>About a week later I got an email back that I applied as
+      a machine learning engineer and a Hacker Rank challenge which
+      would test my deep fundamental knowledge about backpropagation
+      and I needed to complete within a week.</p>
+    <p>Wait, one second, did I read that right? Machine learning
+      <em>engineer</em>? And within a week I need to have strong
+      fundamentals in backpropagation? </p>
+    <p>Challenge accepted!</p>
+    <p>And, I didn't get in.</p>
+    <p>
+      Fortunately, I did learn how to create a simple artificial neural
+    network and understand the maths behind it. <strong>I think the process of learning it can be easy and you could learn what I learned within one to two days, while only knowing
+    high school maths.</strong> High school maths was all I needed and used.</p>
+
+    <h2>So what are artificial neural networks?</h2>
+    <p>A machine learning model that is loosely inspired on the real thing. Researchers
+    were trying to mathematically model the brain back in the sixties. Instead of recreating
+    an organism-like brain, they created a new technique to classify cats or dogs!</p>
+    <aside>This is a cat. Most trained neural networks agree.<img src="cat.jpg" width="100" height="67" alt="Photo by Mikhail Vasilyev on Unsplash"></aside>
+    <p>So like the real thing, the artificial version has:
+      <ol>
+        <li>neurons (visualized as circles, except purple ones) and</li>
+        <li>axons (visualized as lines)</li>
+      </ol>
+
+    <p>And they are used to predict stuff! Such as whether there is a cat in a picture.</p>
+
+    <p>A <em>trained</em> artificial neural network does this well and an untrained one does
+      this not well at all. So in order to know what artificial neural networks are, one really
+      needs to know how it predicts and how it is trained.</p>
+
+    <p>Training an artifical neural network is mathematically speaking the harder part, but for now
+    we will start with the easier part: how does a neural network predict something?</p>
+
+    <h2>How a neural network predicts</h2>
+    <p>Let's look at the smallest and simplest neural network possible. You can play with the numbers
+    and see what happens. For now, let's assume that everything above 0 is a positive classification and everything below 0 is a negative classification.</p>
+    <div id="playground-simplest-ann">
+      <canvas id="simplest-ann" width=1200 height=350></canvas>
+        <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-x">
+        <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-b">
+        <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wx">
+        <!-- <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wb"> -->
+        <div id="simplest-ann-input-layer">Input Layer</div>
+        <div id="simplest-ann-output-layer">Output Layer</div>
+    </div>
+  
+    <p>The two big sliders are determining the value of the circles. The blue circle
+    is called the <strong>input neuron \(x\)</strong>. The purple circle is called a <strong>bias \(b\)</strong>. Per layer there
+    can be multiple neurons and only one bias. And in our little world, biases are
+    always purple. The input neuron \(x\) has a corresponding weight \(w_x\) and the bias \(b\) has the corresponding weight \(w_b\).</p>
+    <p>As you can see, mathematically what happens is that: the green output neuron \(y\) is governed by the following equation: 
+      $$y = w_{x}x + w_{b}b$$
+    For example: set \(x = 0.5\), \(w_x = 1.5\), \(b = 2.00\) and \(w_b = 1\). Then \(y = 2.75\).</p>
+
+    <p>At this point in time neurons and biases seem the same. That is because the simplest neural
+    network that I can think of does not do anything special with the neurons. An already noticable
+    difference is that the weight of bias has to be 1, only the bias value itself can change. Because
+    of this \(y\) can be simplified to:
+    $$ y = w_{x}x + b $$</p>
+
+    <p>Most neurons get a special treatment. You want to know what special treatment? I am glad you ask! Currently our values are not normalized between 0 and 1 (or between -1 and 1, pick whatever
+    you find normal). We're going to normalize it between 0 and 1 with a special function called
+    an activation function.</p>
+    
+    <h3>Activation functions</h3>
+    <p></p>
+
+  </section>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+    });
+  </script>
+  <script type="text/javascript" src="simplest-ann.js"></script>
+</body>
+</html>
