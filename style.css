@@ -55,3 +55,17 @@ aside {
   left: 163px;
   width: 62px;
 }
+
+#simplest-ann-input-layer {
+  position: absolute;
+  top: 10px;
+  left: 50px;
+  font-weight: 900;
+}
+
+#simplest-ann-output-layer {
+  position: absolute;
+  top: 10px;
+  left: 290px;
+  font-weight: 900;
+}
