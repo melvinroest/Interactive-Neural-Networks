@@ -19,25 +19,25 @@
     <aside>This is a cat. Most trained neural networks agree.<img src="cat.jpg" width="100" height="67" alt="Photo by Mikhail Vasilyev on Unsplash"></aside>
     <p>So like the real thing, the artificial version has:
       <ol>
-        <li>neurons (visualized as circles, except purple ones) and</li>
-        <li>axons (visualized as lines)</li>
+        <li>neurons (visualized here as circles, except purple ones) and</li>
+        <li>axons (visualized here as lines)</li>
       </ol>
 
     <p>And they are used to predict stuff! Such as whether there is a cat in a picture.</p>
 
     <p>A <em>trained</em> artificial neural network does this well and an untrained one does
       this not well at all. So in order to know what artificial neural networks are, one really
-      needs to know how it predicts and how it is trained.</p>
+      needs to know how it (1) predicts and (2) how it is trained.</p>
 
-    <p>Training an artifical neural network is mathematically speaking the harder part, but for now
+    <p>Training an artifical neural network is mathematically speaking the harder part. For now
     we will start with the easier part: how does a neural network predict something?</p>
 
     <h2>Showing how a neural network predicts by modeling them as logic gates</h2>
     <p>Let's look at the smallest and simplest neural network possible. We are going to use raw values (non-normalized values) to make it even simpler. We'll tack on complexity as we go.</p>
 
-    <p>The smallest network possible has two layers: one input layer and one output layer. The input layer contains 1 neuron (blue circle) and 1 bias (purple circle). The output layer contains 1 neuron (green circle).</p>
+    <p>The smallest network possible has two layers: one input layer and one output layer. The input layer contains 1 neuron (blue circle) and 1 bias (purple circle, a bias is not a neuron). The output layer contains 1 neuron (green circle).</p>
 
-    <p>This architecture is able to model a NOT gate. And you are going to train this network to become a NOT gate. As you can see now the output neuron outputs a 2. It is your goal for it to output a -1 when the input is 1 and when the input is 1 to output -1. You can play with the sliders and see what happens.</p>
+    <p>This architecture is able to model a NOT gate. And you are going to train this network to become a NOT gate. As you can see now the output neuron outputs a 2. It is your goal for it to output a -1 (the number in the green circle) when the input is 1 (the number in the blue circle) and when the input is 1 to output -1. The idea is to play with all the sliders to see what happens and to find the right values.</p>
     <aside>A NOT gate is a gate which takes one bit as input and flips it. So a 0 becomes a 1 and a 1 becomes a 0. <img width="128" height="46" alt="NOT gate schematic from Wikipedia" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Not-gate-en.svg/1920px-Not-gate-en.svg.png">
 
       <table class="wikitable" align="left">
@@ -85,17 +85,17 @@
     $$ y = w_{x}x + b $$
     </p>
 
-    <aside>In most visualizations biases aren't visualized. The traditional notation for a bias is not split up in \(w_b\) and \(b\) since the value of the bias being 1 was always implicit. So whether \(w_b\) is a variable or \(b\) is a variable, it really depends on the perspective. The traditional notation, however, favors \(b\) which is why I chose for that.</aside>
+    <aside>Most visualizations that I encountered, biases aren't visualized. The traditional notation for a bias is not split up in \(w_b\) and \(b\) since the value of the bias being 1 was always implicit. So whether \(w_b\) is a variable or \(b\) is a variable, it really depends on the perspective. The traditional notation, however, favors \(b\) which is why I chose for that as well.</aside>
 
     <p>Biases are meant to indicate whether a layer of neurons is easily excitable. Meaning that when the value of the bias gets higher, the value of the output layer will be higher as well. They act as a certain threshold as well when the value of the bias gets lower. You can test it for yourself.</p> 
 
     <p>Most neurons get a special treatment. You want to know what special treatment? I am glad you ask! Currently our values are not normalized between 0 and 1 (or between -1 and 1, pick whatever
-    you find normal). We're going to normalize it between 0 and 1 with a special function called
-    an activation function. By doing so we can have many more different weights in order to create our logic NOT gate.</p>
+    you find normal). We're going to normalize it between 0 and 1 with a special mathematical function called an activation function. By doing so we can have many more different weights in order to create our logic NOT gate.</p>
     
     <h2>Activation functions</h2>
+    <!-- Rewrite -->
     <p>Activation functions are slightly analogous to action potentials that real neurons have. That is
-    either a neuron fires, or it doesn't. It needed to exceed a certain threshold. This idea has later been relaxed. Another reason alluded to earlier is data normalization. There are many types of activation function, and the one that we are going to use is called the sigmoid function, also known as $$\sigma(z) = \frac{1}{1 + e^{-z}}$$ where: $$z = w_{x}x + b$$
+    either a neuron fires, or it doesn't. This analogy has later been abandoned but the sigmoid function is quite suited for it. needed to exceed a certain threshold. Another reason alluded to earlier is data normalization. There are many types of activation function, and the one that we are going to use is called the sigmoid function, also known as $$\sigma(z) = \frac{1}{1 + e^{-z}}$$ where: $$z = w_{x}x + b$$ Thus: $$\sigma(z) = \frac{1}{1 + e^{-(w_{x}x + b)}}$$
     It looks like this: you can play with w and b.</p>
 
     <canvas id="xy-graph" width="535" height="300">
@@ -139,7 +139,7 @@
         <!-- <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wb"> -->
         <div id="simplest-ann-sigmoid-input-layer">Input Layer</div>
         <div id="simplest-ann-sigmoid-output-layer">Output Layer</div>
-        <h4>Activation Function Graphed</h4>
+        <h4>Activation Function of Output Layer Graphed</h4>
         <canvas id="simplest-ann-sigmoid-graph" width="535" height="300"></canvas>
     </div>
 
