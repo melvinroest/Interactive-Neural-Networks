@@ -1,6 +1,6 @@
-// Inspired from: http://jsfiddle.net/m1erickson/LumMX/
+(() => { //begin iife
 
-let canvas = document.getElementById("canvas")
+let canvas = document.getElementById("simplest-ann-sigmoid")
 let ctx = canvas.getContext("2d")
 
 // set starting values
@@ -8,48 +8,38 @@ let fps = 60
 
 // progress indicators
 let prevPercent = undefined
-let startPercent = 5
+let startPercent = 10
 let percent = startPercent
-let maxPercent = 95
+let maxPercent = 90
 let direction = 1
-let neuronRadius = 100
+let neuronRadius = 60
 let numberOfNeurons = 5
 let numberOfLayers = 3
 
 //                  input, h1, output
 let layerOffsets = Array(numberOfLayers).fill().map( (v, i) => i * (neuronRadius * 4) + 100 )
                     // n1   n2   n3   n4
-let verticalOffsets = Array(numberOfNeurons).fill().map( (v, i) => (1 + i) * (neuronRadius * 2.5) )
+let verticalOffsets = Array(numberOfNeurons).fill().map( (v, i) => (1 + i) * (neuronRadius * 1.5) )
 
 // other settings
 let layerAnimationCounter = 0
-let font = "36px Baskerville"
+let font = "24px Baskerville"
 
 // init neurons and weights
 // input layer
 let x1 = {x: layerOffsets[0], y: verticalOffsets[0], r: neuronRadius, color: "#9ADBFF", initValue: 0.5,
-type: "input", weights: [0.57, 0.3]}
-let x2 = {x: layerOffsets[0], y: verticalOffsets[1], r: neuronRadius, color: "#9ADBFF", initValue: 0.5,
-type: "input", weights: [0.57, 0.3]}
+type: "input", weights: [0.25]}
 let b1 = {x: layerOffsets[0], y: verticalOffsets[2], r: neuronRadius, color: "#AD9AFF", initValue: 1.0,
-type: "bias", weights: [1, 1]}
-let l1 = [x1, x2, b1]
+type: "bias", weights: [1]}
+let l1 = [x1, b1]
 
 let y1 = {x: layerOffsets[1], y: verticalOffsets[0], r: neuronRadius, color: "#9AFFBD",
-type: "hidden", weights: [0.57, 0.3]}
-let y2 = {x: layerOffsets[1], y: verticalOffsets[1], r: neuronRadius, color: "#9AFFBD",
-type: "hidden", weights: [0.57, 0.3]}
-let b2 = {x: layerOffsets[1], y: verticalOffsets[2], r: neuronRadius, color: "#AD9AFF", initValue: 1.0,
-type: "bias", weights: [1, 1]}
-let l2 = [y1, y2, b2]
+type: "output", weights: [0.57]}
+let l2 = [y1]
 
-let z1 = {x: layerOffsets[2], y: verticalOffsets[0], r: neuronRadius, color: "#9AFFBD",
-type: "output"}
-let z2 = {x: layerOffsets[2], y: verticalOffsets[1], r: neuronRadius, color: "#9AFFBD",
-type: "output"}
-let l3 = [z1, z2]
+let allNeurons = [l1, l2]
 
-let allNeurons = [l1, l2, l3]
+let sig = z => 1 / (1 + Math.exp(-z))
 
 // draw the neurons and axons
 for(let i = 0; i < allNeurons.length; i++){
@@ -61,7 +51,7 @@ for(let i = 0; i < allNeurons.length; i++){
             for(let k = 0; k < neuron.weights.length; k++){
                 let outputNeuron = allNeurons[i + 1][k]
                 let axonWeight = neuron.weights[k]
-                drawAxon({a: neuron, b: outputNeuron}, axonWeight)   
+                drawAxon({a: neuron, b: outputNeuron}, axonWeight)
             }
         }
     }
@@ -82,7 +72,11 @@ function calculate(input, output){
             return a + b
         })
 
-        out.initValue = activation
+        //draw it on the graph immediately
+        activationOnGraph = activation
+        drawGraph()
+
+        out.initValue = sig(activation)
         drawNeuron(out)
     })
 
@@ -90,6 +84,23 @@ function calculate(input, output){
 
 // the draw loop
 function draw(){
+    let simplest_ann_xout = document.getElementById("simplest-ann-sigmoid-slider-x").value
+    let simplest_ann_bout = document.getElementById("simplest-ann-sigmoid-slider-b").value
+    let simplest_ann_wxout = document.getElementById("simplest-ann-sigmoid-slider-wx").value
+    // let simplest_ann_wbout = document.getElementById("simplest-ann-slider-wb").value
+    x1.initValue = parseFloat(simplest_ann_xout)
+    x1.weights[0] = parseFloat(simplest_ann_wxout)
+    b1.initValue = parseFloat(simplest_ann_bout)
+    // b1.weights[0] = parseFloat(simplest_ann_wbout)
+
+    //need to draw input neurons for slider changes
+    let inputNeurons = allNeurons[0]
+    for(let j = 0; j < inputNeurons.length; j++){
+        let neuron = inputNeurons[j]
+        drawNeuron(neuron)
+    }
+
+
 
     let i = layerAnimationCounter
     let layer = allNeurons[i]
@@ -194,16 +205,16 @@ function animateAxon(neurons, weight) {
     start.wx = start.x + (end.x - start.x) / 4
     start.wy = start.y + (end.y - start.y) / 4
     ctx.beginPath()
-    ctx.rect(start.wx - 30, start.wy - 30, 60, 40)
+    ctx.rect(start.wx - 25, start.wy - 40, 60, 25)
     ctx.fillStyle = "white"
     ctx.fill()
     ctx.stroke()
     ctx.closePath()
 
-    ctx.font = "36px Baskerville"
+    ctx.font = font
     ctx.textAlign = "center"
     ctx.fillStyle = "black"
-    ctx.fillText(weight, start.wx, start.wy)
+    ctx.fillText(weight, start.wx, start.wy - 20)
 
     return dot;
     
@@ -233,7 +244,7 @@ function drawAxon(neurons, weight) {
     start.wx = start.x + (end.x - start.x) / 4
     start.wy = start.y + (end.y - start.y) / 4
     ctx.beginPath()
-    ctx.rect(start.wx - 30, start.wy - 30, 60, 40)
+    ctx.rect(start.wx - 25, start.wy - 40, 60, 25)
     ctx.fillStyle = "white"
     ctx.fill()
     ctx.stroke()
@@ -242,7 +253,7 @@ function drawAxon(neurons, weight) {
     ctx.font = font
     ctx.textAlign = "center"
     ctx.fillStyle = "black"
-    ctx.fillText(weight, start.wx, start.wy)
+    ctx.fillText(weight, start.wx, start.wy - 20)
 }
 
 
@@ -278,7 +289,7 @@ function drawNeuron(opts) {
     ctx.font = font
     ctx.textAlign = "center"
     ctx.fillStyle = "black"
-    let neuronValue = "-"
+    let neuronValue = 0
     if(opts.initValue) {
         neuronValue = opts.initValue.toFixed(2)
     }
@@ -292,3 +303,148 @@ function debugRect(x, y, width, height){
     ctx.stroke()
     ctx.closePath()
 }
+
+
+
+
+//GRAPH PART
+
+
+
+
+//adapted from: http://matt.might.net/articles/rendering-mathematical-functions-in-javascript-with-canvasGraph-html/
+let canvasGraph = document.getElementById('simplest-ann-sigmoid-graph')
+let ctxGraph = canvasGraph.getContext('2d')
+let width = canvasGraph.width 
+let height = canvasGraph.height
+let activationOnGraph = 2
+
+// get logical viewport
+let vp = {
+  min: {
+    x: -5,
+    y: 0
+  },
+  max: {
+    x: 5,
+    y: 1
+  }
+}
+
+let marks = {
+  x: 1,
+  y: 1
+}
+
+// Returns the physical x-coordinate of a logical x-coordinate
+let xPhys = x => (x - vp.min.x) / (vp.max.x - vp.min.x) * width
+
+// Returns the physical y-coordinate of a logical y-coordinate
+let yPhys = y => height - (y - vp.min.y) / (vp.max.y - vp.min.y) * height
+
+function drawGraph() {
+  ctxGraph.clearRect(0, 0, width, height)
+  drawAxes()
+  drawFormula(sig)
+}
+  
+function drawAxes() {
+  ctxGraph.save()
+  ctxGraph.linewidth = 2
+  ctxGraph.strokeStyle = "black"
+ 
+  createAxisPart(0, vp.min.y)
+  createAxisPart(0, vp.max.y)
+  createAxisPart(vp.min.x, 0)
+  createAxisPart(vp.max.x, 0)
+
+  createAxisMarkPartX(vp.min.x, -1)
+  createAxisMarkPartX(vp.max.x, 1)
+  createAxisMarkPartY(vp.min.y, -1)
+  createAxisMarkPartY(vp.max.y, 1)
+ 
+  ctxGraph.restore()
+}
+
+function createAxisPart(x, y){
+  ctxGraph.beginPath()
+  ctxGraph.moveTo(xPhys(0), yPhys(0))
+  ctxGraph.lineTo(xPhys(x), yPhys(y)) //e.g. (vp.min.x, 0) or (0, vp.max.y)
+  ctxGraph.stroke()
+}
+
+function createAxisMarkPartX(amountOfMarks, sign){
+  for (let i = 1; i < amountOfMarks * sign; i++) {
+    ctxGraph.beginPath()
+    ctxGraph.moveTo(xPhys(i * sign), yPhys(0) - 5)
+    ctxGraph.lineTo(xPhys(i * sign), yPhys(0) + 5)
+    ctxGraph.stroke()
+  }
+}
+
+function createAxisMarkPartY(amountOfMarks, sign){
+  for (let i = 1; i < amountOfMarks * sign; i++) {
+    ctxGraph.beginPath()
+    ctxGraph.moveTo(xPhys(0) - 5, yPhys(i * sign))
+    ctxGraph.lineTo(xPhys(0) + 5, yPhys(i * sign))
+    ctxGraph.stroke()
+  }
+}
+
+// When rendering, xDist determines the horizontal distance between points
+
+document.getElementById("wx").addEventListener('input', () => {
+  drawGraph()
+})
+
+document.getElementById("b").addEventListener('input', () => {
+  drawGraph()
+})
+
+function drawFormula(f) {
+  let wx = parseFloat(document.getElementById("simplest-ann-sigmoid-slider-wx").value)
+  let xViz = parseFloat(document.getElementById("simplest-ann-sigmoid-slider-x").value)
+  let b = parseFloat(document.getElementById("simplest-ann-sigmoid-slider-b").value)
+
+  ctxGraph.beginPath()
+  ctxGraph.strokeStyle = "red"
+  let z = wx * vp.min.x + b
+  let y = sig(z)
+  let zMin = vp.min.x
+  let zMax = vp.max.x
+  //ask help for Gabor
+  if(wx < 0){
+    zMax = vp.min.x
+    zMin = vp.max.x
+  }
+  ctxGraph.moveTo(xPhys(zMin), yPhys(y))
+  let xDist = 0.01
+  //ask help for Gabor
+  for (let x = -20; x <= 20; x += xDist) {
+    z = wx * x + b
+    y = sig(z)
+    ctxGraph.lineTo(xPhys(z), yPhys(y))
+  }
+  ctxGraph.stroke()
+
+  //draw dot
+  ctxGraph.fillStyle = "#5DB6E6"
+  ctxGraph.strokeStyle = "black"
+  ctxGraph.beginPath()
+  let dotSize = 8
+  ctxGraph.arc(xPhys(activationOnGraph), yPhys(sig(activationOnGraph)), dotSize, 0, Math.PI * 2, true)
+  ctxGraph.closePath()
+  ctxGraph.fill()
+  ctxGraph.stroke()
+
+  ctxGraph.font = font
+  ctxGraph.textAlign = "left"
+  ctxGraph.fillStyle = "black"
+  ctxGraph.fillText(`z = ${wx} * ${xViz} + ${b} = ${activationOnGraph.toFixed(2)}`, 10, 20)
+  ctxGraph.fillText(`\u{03c3}(z) = ${f(activationOnGraph).toFixed(2)}`, 10, 60)
+  
+}
+
+drawGraph()
+
+})()

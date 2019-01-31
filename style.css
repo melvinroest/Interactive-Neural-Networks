@@ -34,6 +34,12 @@ aside {
   border-left: dotted thin #000;
 }
 
+span.slider{
+  display: inline-block;
+  width: 30px;
+}
+
+/* PLAYGROUNDS */
 #playground-simplest-ann {
   position: relative;
 }
@@ -72,6 +78,50 @@ aside {
 }
 
 #simplest-ann-output-layer {
+  position: absolute;
+  top: 10px;
+  left: 290px;
+  font-weight: 900;
+}
+
+#playground-simplest-ann-sigmoid {
+  position: relative;
+}
+
+#simplest-ann-sigmoid-slider-x {
+  position: absolute;
+  top: 150px;
+  left: 25px;
+}
+
+#simplest-ann-sigmoid-slider-wx {
+  position: absolute;
+  top: 73px;
+  left: 163px;
+  width: 62px;
+}
+
+#simplest-ann-sigmoid-slider-b {
+  position: absolute;
+  top: 330px;
+  left: 25px;
+}
+
+#simplest-ann-sigmoid-slider-wb {
+  position: absolute;
+  top: 208px;
+  left: 163px;
+  width: 62px;
+}
+
+#simplest-ann-sigmoid-input-layer {
+  position: absolute;
+  top: 10px;
+  left: 50px;
+  font-weight: 900;
+}
+
+#simplest-ann-sigmoid-output-layer {
   position: absolute;
   top: 10px;
   left: 290px;

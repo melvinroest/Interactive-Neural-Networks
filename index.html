@@ -87,13 +87,13 @@
 
     <aside>In most visualizations biases aren't visualized. The traditional notation for a bias is not split up in \(w_b\) and \(b\) since the value of the bias being 1 was always implicit. So whether \(w_b\) is a variable or \(b\) is a variable, it really depends on the perspective. The traditional notation, however, favors \(b\) which is why I chose for that.</aside>
 
-    <p>Biases are meant to indicate whether a layer of neurons easily excitable. Meaning that when the value of the bias gets higher, the value of the output layer will be higher as well. They act as a certain threshold as well when the value of the bias gets lower. You can test it for yourself.</p> 
+    <p>Biases are meant to indicate whether a layer of neurons is easily excitable. Meaning that when the value of the bias gets higher, the value of the output layer will be higher as well. They act as a certain threshold as well when the value of the bias gets lower. You can test it for yourself.</p> 
 
     <p>Most neurons get a special treatment. You want to know what special treatment? I am glad you ask! Currently our values are not normalized between 0 and 1 (or between -1 and 1, pick whatever
     you find normal). We're going to normalize it between 0 and 1 with a special function called
     an activation function. By doing so we can have many more different weights in order to create our logic NOT gate.</p>
     
-    <h3>Activation functions</h3>
+    <h2>Activation functions</h2>
     <p>Activation functions are slightly analogous to action potentials that real neurons have. That is
     either a neuron fires, or it doesn't. It needed to exceed a certain threshold. This idea has later been relaxed. Another reason alluded to earlier is data normalization. There are many types of activation function, and the one that we are going to use is called the sigmoid function, also known as $$\sigma(z) = \frac{1}{1 + e^{-z}}$$ where: $$z = w_{x}x + b$$
     It looks like this: you can play with w and b.</p>
@@ -103,20 +103,20 @@
     </canvas>
     <br />
     <br />
-    <input type="range" min="-10" max="10" value="1" step="0.25" class="slider" id="wx">
-    <span id="wx-out">w: 1</span>
-    <input type="range" min="-10" max="10" value="0" step="0.25" class="slider" id="b">
-    <span id="b-out">b: 0</span>
+    <input type="range" min="-10" max="10" value="1" step="0.25" class="slider" id="wx">\(w_x\):
+    <span class="slider" id="wx-out">1.00</span>
+    <input type="range" min="-10" max="10" value="0" step="0.25" class="slider" id="b">b: 
+    <span class="slider" id="b-out">0</span>
     <script type="text/javascript" src="plot.js"></script>
     <script>
       function initSliders(){
         let wx = document.getElementById('wx')
         let b = document.getElementById('b')
         wx.addEventListener('input', () => {
-          document.getElementById('wx-out').innerHTML = 'w: ' + wx.value
+          document.getElementById('wx-out').innerHTML = wx.value
         })
         b.addEventListener('input', () => {
-          document.getElementById('b-out').innerHTML = 'b: ' + b.value
+          document.getElementById('b-out').innerHTML = b.value
         })
       }
       initSliders();
@@ -127,10 +127,64 @@
     </p>
 
     <p>
-      Let's look at the same neural network with this new activation function.
+      Let's look at the same neural network with this new activation function combined with the graph of the activation function. The sliders of the neural network have an effect on the blue dot on the graph. So you can play with it again and try to get a neural network where you will get an
+      inverter again.
     </p>
 
+    <div id="playground-simplest-ann-sigmoid">
+      <canvas id="simplest-ann-sigmoid" width=400 height=350></canvas>
+        <input type="range" min="-1" max="1" value="1" step="2" class="slider" id="simplest-ann-sigmoid-slider-x">
+        <input type="range" min="-10" max="10" value="1" step="0.5" class="slider" id="simplest-ann-sigmoid-slider-b">
+        <input type="range" min="-10" max="10" value="1" step="0.5" class="slider" id="simplest-ann-sigmoid-slider-wx">
+        <!-- <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wb"> -->
+        <div id="simplest-ann-sigmoid-input-layer">Input Layer</div>
+        <div id="simplest-ann-sigmoid-output-layer">Output Layer</div>
+        <h4>Activation Function Graphed</h4>
+        <canvas id="simplest-ann-sigmoid-graph" width="535" height="300"></canvas>
+    </div>
+
+    <p>
+      This is our first neural network that you trained manually! In this explorable post we
+      have seen how we create an inverter through a neural network by playing with the parameters
+      of it.
+    </p>
+
+    <h2>Code your own neural network inverter</h2>
+    We are going to code the feedforward function of our own neural network inverter. We can assume the weights are already trained. The following code can be pasted into the console and you can implement the function yourself.
+
+      <!-- Thanks to: https://tohtml.com/jScript/   -->
+      <pre style="color:#000000;background:#ffffff;"><span style="color:#800000; font-weight:bold; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let</span> sigmoid <span style="color:#808030; ">=</span> z <span style="color:#808030; ">=</span><span style="color:#808030; ">&gt;</span> <span style="color:#008c00; ">1</span>
+      <span style="color:#800000; font-weight:bold; ">let</span> feedforward <span style="color:#808030; ">=</span> <span style="color:#808030; ">(</span>x<span style="color:#808030; ">,</span> wx<span style="color:#808030; ">,</span> b<span style="color:#808030; ">)</span> <span style="color:#808030; ">=</span><span style="color:#808030; ">&gt;</span> <span style="color:#800080; ">{</span>
+        <span style="color:#800000; font-weight:bold; ">let</span> z <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+        <span style="color:#800000; font-weight:bold; ">return</span> sig<span style="color:#808030; ">(</span>z<span style="color:#808030; ">)</span>
+      <span style="color:#800080; ">}</span>
+
+      feedforward<span style="color:#808030; ">(</span><span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#808030; ">-</span><span style="color:#008c00; ">10</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span>
+    </pre>
+
+    The goal is to implement the z variable and the sigmoid function. By doing that you'll have a very humble trained neural network.
+
+    <h2>The next Chapters</h2>
+
+    <p>
+      In the next chapter we are going to scale this up for the creation of AND gates, OR gates and XOR gates. We will finish the chapter by looking at a 2 by 2 by 2 neural network. Through this gradual form of scaling it up, matrices will start to appear and we'll see why they are handy (they aren't strictly needed).
+    </p>
+
+    <p>After the next chapter we will take a deep dive into why neural networks learn through the combined algorithms called gradient descent and backpropagation. So instead of you manually needing to train it, you can train it automatically!</p>
+
+    <p><strong>To do: or shall I go into backpropagation already with this inverter?</strong></p>
+
   </section>
+
+
+
+
+
+
+
+
+
+
   <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
   <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -138,5 +192,6 @@
     });
   </script>
   <script type="text/javascript" src="simplest-ann.js"></script>
+  <script type="text/javascript" src="simplest-ann-sigmoid.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
-// Inspired from: http://jsfiddle.net/m1erickson/LumMX/
+(() => { //begin iife
 
-canvas = document.getElementById("simplest-ann")
-ctx = canvas.getContext("2d")
+let canvas = document.getElementById("simplest-ann")
+let ctx = canvas.getContext("2d")
 
 // set starting values
 let fps = 60
@@ -297,3 +297,5 @@ function debugRect(x, y, width, height){
     ctx.stroke()
     ctx.closePath()
 }
+
+})() //end iife
