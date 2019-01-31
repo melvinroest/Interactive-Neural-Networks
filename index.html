@@ -77,7 +77,33 @@
     an activation function.</p>
     
     <h3>Activation functions</h3>
-    <p></p>
+    <p>Activation functions are slightly analogous to action potentials that real neurons have. That is
+    either a neuron fires, or it doesn't. It needed to exceed a certain threshold. This idea has later been relaxed. Another reason alluded to earlier is data normilization. There are many types of activation function, and the one that we are going to use is called the sigmoid function, also known as $$\sigma(z) = \frac{1}{1 + e^{-z}}$$ where: $$z = wx + b$$
+    It looks like this: you can play with w and b.</p>
+
+    <canvas id="xy-graph" width="535" height="300">
+    CANVAS NOT SUPPORTED IN THIS BROWSER!
+    </canvas>
+    <br />
+    <br />
+    <input type="range" min="-10" max="10" value="1" step="0.25" class="slider" id="wx">
+    <span id="wx-out">w: 1</span>
+    <input type="range" min="-10" max="10" value="0" step="0.25" class="slider" id="b">
+    <span id="b-out">b: 0</span>
+    <script type="text/javascript" src="plot.js"></script>
+    <script>
+      function initSliders(){
+        let wx = document.getElementById('wx')
+        let b = document.getElementById('b')
+        wx.addEventListener('input', () => {
+          document.getElementById('wx-out').innerHTML = 'w: ' + wx.value
+        })
+        b.addEventListener('input', () => {
+          document.getElementById('b-out').innerHTML = 'b: ' + b.value
+        })
+      }
+      initSliders();
+    </script>
 
   </section>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>

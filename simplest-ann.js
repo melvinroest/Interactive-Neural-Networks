@@ -1,6 +1,6 @@
 // Inspired from: http://jsfiddle.net/m1erickson/LumMX/
 
-let canvas = document.getElementById("simplest-ann")
+canvas = document.getElementById("simplest-ann")
 let ctx = canvas.getContext("2d")
 
 // set starting values
