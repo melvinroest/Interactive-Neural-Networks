@@ -1,7 +1,7 @@
 // Inspired from: http://jsfiddle.net/m1erickson/LumMX/
 
 canvas = document.getElementById("simplest-ann")
-let ctx = canvas.getContext("2d")
+ctx = canvas.getContext("2d")
 
 // set starting values
 let fps = 60

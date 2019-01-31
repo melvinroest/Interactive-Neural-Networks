@@ -6,19 +6,27 @@ body {
     background-color: #DAEBFF;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 #content {
+  position: relative;
   margin: 0 auto;
   padding: 15px;
   width: 600px;
   background-color: white;
 }
 
+p {
+  width: 100%;
+}
+
 aside {
-  float: right;
-  position: relative;
-  margin: -32px -15px;
+  display: block;
+  position: absolute;
   width: 30%;
-  left: 30%;
+  left: 100%;
   font-size: 14px;
   font-weight: 100;
   line-height: 15px;
