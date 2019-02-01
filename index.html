@@ -10,6 +10,12 @@
     <p>Hello!</p>
     <p>I gave myself the challenge to learn as much as I could about neural networks within a week. I've noitced process of understanding it could be easy and you could learn what I learned within one to two days of what took me a week, while only knowing high school maths.</p>
 
+    <aside>Other sources that helped:
+      <ol>
+        <li><a href="https://www.youtube.com/watch?v=bxe2T-V8XRs&list=PLiaHhY2iBX9hdHaRr6b7XevZtgZRa1PoU">Welch Lab's videos on YouTube</a></li>
+        <li><a href="https://www.youtube.com/watch?v=kNPGXgzxoHw">Solving XOR with a hidden layer</a></li>
+      </ol>
+    </aside>
     <p>During my week I constantly reread <a href="http://neuralnetworksanddeeplearning.com">Michael Nielsen's first two chapters</a> and rewatched <a href="https://www.youtube.com/watch?v=aircAruvnKk&index=2&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">3Blue1Brown's</a> explanation with the same book as source material. While their explanations are great, there were a few things that made the process a lot longer than it should've been. I hope with this post to be able to make the introduction a bit more gentle by linking some of the mathematical notation they use and by using interactive examples.
 
     <h2>So what are artificial neural networks?</h2>
@@ -37,7 +43,7 @@
 
     <p>The smallest network possible has two layers: one input layer and one output layer. The input layer contains 1 neuron (blue circle) and 1 bias (purple circle, a bias is not a neuron). The output layer contains 1 neuron (green circle).</p>
 
-    <p>This architecture is able to model a NOT gate. And you are going to train this network to become a NOT gate. As you can see now the output neuron outputs a 2. It is your goal for it to output a -1 (the number in the green circle) when the input is 1 (the number in the blue circle) and when the input is 1 to output -1. The idea is to play with all the sliders to see what happens and to find the right values.</p>
+    <p>This architecture is able to model a NOT gate. And you are going to train this network to become a NOT gate. As you can see now the output neuron outputs a 2. It is your goal for it to output a 0 (the number in the green circle) when the input is 1 (the number in the blue circle) and when the input is 1 to output 0. The idea is to play with all the sliders to see what happens and to find the right values.</p>
     <aside>A NOT gate is a gate which takes one bit as input and flips it. So a 0 becomes a 1 and a 1 becomes a 0. <img width="128" height="46" alt="NOT gate schematic from Wikipedia" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Not-gate-en.svg/1920px-Not-gate-en.svg.png">
 
       <table class="wikitable" align="left">
@@ -60,7 +66,7 @@
     </aside>
     <div id="playground-simplest-ann">
       <canvas id="simplest-ann" width=400 height=350></canvas>
-        <input type="range" min="-1" max="1" value="1" step="2" class="slider" id="simplest-ann-slider-x">
+        <input type="range" min="0" max="1" value="1" step="0" class="slider" id="simplest-ann-slider-x">
         <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-b">
         <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wx">
         <!-- <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wb"> -->
@@ -68,7 +74,7 @@
         <div id="simplest-ann-output-layer">Output Layer</div>
     </div>
 
-    <p>Did you get it? What values did you use? Do you know what process is happening for it to produce a -1 or +1?</p>
+    <p>Did you get it? What values did you use? Do you know what process is happening for it to produce a 0 or 1?</p>
   
     <p>The two big sliders are determining the value of the circles. The blue circle
     is called the <strong>input neuron \(x\)</strong>. The purple circle is called a <strong>bias \(b\)</strong>. Per layer there
@@ -76,13 +82,15 @@
     always purple. The input neuron \(x\) has a corresponding <strong>weight \(w_x\)</strong> and the bias \(b\) has the corresponding weight <span class="nowrap">\(w_b\).</span></p>
     <p>As you can see, mathematically what happens is that: the green output neuron \(y\) is governed by the following equation: 
       $$y = w_{x}x + w_{b}b$$
-    My slider values were: set \(w_x = -1\), \(b = 0\) for \(y = 1\).</p>
+    My slider values were: set \(w_x = -1\), \(b = 1\) and got for \(x = 0\) \(y = 1\) and for \(x = 1\) \(y = 0 \).</p>
 
     <p>At this point in time neurons and biases seem the same. That is because the simplest neural
     network that I can think of does not do anything special with the neurons. An already noticable
     difference is that the weight of the bias has to be 1, only the bias value itself can change. Because
     of this \(y\) can be simplified to:
     $$ y = w_{x}x + b $$
+    And since there is only one weight to think about, we can drop the index, which simplifies to:
+    $$ y = wx + b $$
     </p>
 
     <aside>Most visualizations that I encountered, biases aren't visualized. The traditional notation for a bias is not split up in \(w_b\) and \(b\) since the value of the bias being 1 was always implicit. So whether \(w_b\) is a variable or \(b\) is a variable, it really depends on the perspective. The traditional notation, however, favors \(b\) which is why I chose for that as well.</aside>
@@ -93,9 +101,9 @@
     you find normal). We're going to normalize it between 0 and 1 with a special mathematical function called an activation function. By doing so we can have many more different weights in order to create our logic NOT gate.</p>
     
     <h2>Activation functions</h2>
-    <!-- Rewrite -->
-    <p>Activation functions are slightly analogous to action potentials that real neurons have. That is
-    either a neuron fires, or it doesn't. This analogy has later been abandoned but the sigmoid function is quite suited for it. needed to exceed a certain threshold. Another reason alluded to earlier is data normalization. There are many types of activation function, and the one that we are going to use is called the sigmoid function, also known as $$\sigma(z) = \frac{1}{1 + e^{-z}}$$ where: $$z = w_{x}x + b$$ Thus: $$\sigma(z) = \frac{1}{1 + e^{-(w_{x}x + b)}}$$
+    <aside>Taking a percentage of something is a form of data normalization. The idea of data normalization is that it is compared to something, something has to be the norm. If you take
+    80 out of 200 and say that it is 40%, it means the norm is 200. In this particular case the norm is: we want to squash every number to a range between 0 and 1.</aside>
+    <p>In order to normalize our data we need an activation function. There are many types of activation function, and the one that we are going to use is called the sigmoid function, also known as $$\sigma(z) = \frac{1}{1 + e^{-z}}$$ where: $$z = wx + b$$ Thus: $$\sigma(z) = \frac{1}{1 + e^{-(wx + b)}}$$
     It looks like this: you can play with w and b.</p>
 
     <canvas id="xy-graph" width="535" height="300">
@@ -103,7 +111,7 @@
     </canvas>
     <br />
     <br />
-    <input type="range" min="-10" max="10" value="1" step="0.25" class="slider" id="wx">\(w_x\):
+    <input type="range" min="-10" max="10" value="1" step="0.25" class="slider" id="wx">\(w\):
     <span class="slider" id="wx-out">1.00</span>
     <input type="range" min="-10" max="10" value="0" step="0.25" class="slider" id="b">b: 
     <span class="slider" id="b-out">0</span>
@@ -123,8 +131,26 @@
     </script>
 
     <p>
-      We were already familiar with the equation \(z = w_{x}x + b\) from previous chapter. The sigmoid function \(delta(z)\) squishes high positive or negative value to a number between 0 and 1. Have you seen what happens when you move \(b\)? It is quite clearly visible that it either acts as a threshhold for activation when \(b\) is negative and acts as an enabler in its activation when \(b\) is positive.
+      We were already familiar with the equation \(z = wx + b\) from previous chapter. The sigmoid function \(delta(z)\) squishes high positive or negative value to a number between 0 and 1. Have you seen what happens when you move \(b\)? It is quite clearly visible that it either acts as a threshhold for activation when \(b\) is negative and acts as an enabler in its activation when \(b\) is positive.
     </p>
+
+    <aside><p><strong>why \(\sigma(z) = \frac{1}{1 + e^{-(wx + b)}}\) gives a 1 when z is high, and a 0 when z is low.</strong></p>
+      <p>
+      Since we know that \(z = wx + b\), we can rewrite \(\sigma(z)\) as
+      \(\sigma(z) = \frac{1}{1 + e^{-z}}\). 
+      </p>
+      <p>
+      <p>A more intuitive way to understand this formula is to multiply everything by \(e^z\) and then simplify. We can do this as such:
+      $$\sigma(z) = \frac{1}{1 + e^{-z}}$$
+      $$\sigma(z) = \frac{1 * e^{z}}{ (1 * e^{z}) + (e^{-z} * e^{z})}$$
+      Note: \(e^{-z} * e^{z} = \frac{e^z}{e^{z}} = 1\)
+      </p>
+      <p>
+      Simplifying yields:
+      $$\sigma(z) = \frac{e^z}{e^z + 1}$$
+      From this expression it's clearly visible that when z is high \(\sigma(z) \approx 1\) and when z is low \(\sigma(z) \approx 0\)
+      </p>
+    </aside>
 
     <p>
       Let's look at the same neural network with this new activation function combined with the graph of the activation function. The sliders of the neural network have an effect on the blue dot on the graph. So you can play with it again and try to get a neural network where you will get an
@@ -133,9 +159,9 @@
 
     <div id="playground-simplest-ann-sigmoid">
       <canvas id="simplest-ann-sigmoid" width=400 height=350></canvas>
-        <input type="range" min="-1" max="1" value="1" step="2" class="slider" id="simplest-ann-sigmoid-slider-x">
-        <input type="range" min="-10" max="10" value="1" step="0.5" class="slider" id="simplest-ann-sigmoid-slider-b">
-        <input type="range" min="-10" max="10" value="1" step="0.5" class="slider" id="simplest-ann-sigmoid-slider-wx">
+        <input type="range" min="0" max="1" value="1" step="1" class="slider" id="simplest-ann-sigmoid-slider-x">
+        <input type="range" min="-20" max="10" value="1" step="0.5" class="slider" id="simplest-ann-sigmoid-slider-b">
+        <input type="range" min="-20" max="10" value="1" step="0.5" class="slider" id="simplest-ann-sigmoid-slider-wx">
         <!-- <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wb"> -->
         <div id="simplest-ann-sigmoid-input-layer">Input Layer</div>
         <div id="simplest-ann-sigmoid-output-layer">Output Layer</div>
@@ -154,26 +180,95 @@
 
       <!-- Thanks to: https://tohtml.com/jScript/   -->
       <pre style="color:#000000;background:#ffffff;"><span style="color:#800000; font-weight:bold; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let</span> sigmoid <span style="color:#808030; ">=</span> z <span style="color:#808030; ">=</span><span style="color:#808030; ">&gt;</span> <span style="color:#008c00; ">1</span>
+
       <span style="color:#800000; font-weight:bold; ">let</span> feedforward <span style="color:#808030; ">=</span> <span style="color:#808030; ">(</span>x<span style="color:#808030; ">,</span> wx<span style="color:#808030; ">,</span> b<span style="color:#808030; ">)</span> <span style="color:#808030; ">=</span><span style="color:#808030; ">&gt;</span> <span style="color:#800080; ">{</span>
         <span style="color:#800000; font-weight:bold; ">let</span> z <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
-        <span style="color:#800000; font-weight:bold; ">return</span> sig<span style="color:#808030; ">(</span>z<span style="color:#808030; ">)</span>
+        <span style="color:#800000; font-weight:bold; ">return</span> sigmoid<span style="color:#808030; ">(</span>z<span style="color:#808030; ">)</span>
       <span style="color:#800080; ">}</span>
 
       feedforward<span style="color:#808030; ">(</span><span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#808030; ">-</span><span style="color:#008c00; ">10</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span>
+      feedforward<span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#808030; ">-</span><span style="color:#008c00; ">10</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span>
     </pre>
 
     The goal is to implement the z variable and the sigmoid function. By doing that you'll have a very humble trained neural network.
 
-    <h2>The next Chapters</h2>
+    <h2>Automatically training the weights</h2>
+
+
+
+    <aside>One neuron is a neuron. Two neurons is a network.</aside>
+    <p>Let's talk about how this neural inverter learns things automatically. So far, we trained our small humbe neural network by fumbling around with the parameters ourselves. We played with the weight \(w\) of \(x\) and we played with the bias \(b\). We trained them on two training examples: \(x = 0\) and \(x = 1\).</p>
+
+    <p>Before we talk about how neural networks automatically learn through example data, let's quickly look at how I would learn a new accent through imitating another person's accent from a YouTube video. Learning by example!</p>
 
     <p>
-      In the next chapter we are going to scale this up for the creation of AND gates, OR gates and XOR gates. We will finish the chapter by looking at a 2 by 2 by 2 neural network. Through this gradual form of scaling it up, matrices will start to appear and we'll see why they are handy (they aren't strictly needed).
+    I listen to how the person I want to imitate is pronouncing the word and then listen to how I am saying it. I then think about what the <em>difference</em> is, adjust the difference as much as I possibly can and then imitate again. When I try to imitate again, the difference between what I am doing and what I'm trying to imitate is hopefully smaller. I iterate on this process as much as possible until I do it good enough.</p>
+
+    <aside>See <a href="https://www.youtube.com/watch?v=VBQWZmqb33I">these people learning a British accent through this method</a>! At one point, the difference is not necessarily getting smaller.</aside>
+
+    <p>
+    With neural networks, the output neuron has a certain value. That certain value has to match a desired value. By analogy of the previous paragraph, it would make sense that a neural network needs to learn more when that output is nowhere close the desired value compared to when it is quite close.
     </p>
 
-    <p>After the next chapter we will take a deep dive into why neural networks learn through the combined algorithms called gradient descent and backpropagation. So instead of you manually needing to train it, you can train it automatically!</p>
 
-    <p><strong>To do: or shall I go into backpropagation already with this inverter?</strong></p>
+    <aside>
+      This notation is heavily inspired by the <a href="https://www.youtube.com/watch?v=bxe2T-V8XRs&list=PLiaHhY2iBX9hdHaRr6b7XevZtgZRa1PoU">Welch Labs' videos on YouTube</a>. <a href="http://neuralnetworksanddeeplearning.com">Michael Nielsen's</a> notation uses \(a\) and \(y(x)\). They equate as follows: \(y = a\) and \(\hat{y} = y(x)\). 
+    </aside>
 
+    <p>
+    The difference between the actual output value of a neuron and the desired value is called the error. For example if the output neuron \(y = 0.2\) and the desired value \(\hat{y} = 1\), then the error \(e = 0.8 \). Therefore:
+    $$ e = (y - \hat{y}) $$
+    </p>
+
+
+    <!-- Maybe put in a network to have an error exercise. -->
+
+    <aside>I will soon explain why we need to calculate partial derivatives, for now, just take it for granted.</aside>
+
+    <p>
+      Now that we have the error defined, we can define a cost function. A cost function is simply the same thing as calculating the error, with the difference that it is easy to use when calculating derivatives. The idea of the cost function is the same as calculating an error: it should give us an indication of how much we're wrong. Because of this, cost functions can have different formula's but they intend the same thing: to measure how to minimize the error.
+
+      This means that $$ C = (y - \hat{y}) $$
+
+      can be seen as a cost function. It is not a very good one however, we need to calculate the partial derivative of it later and therefore a quadratic function will be more informative. Another one I've seen is this one:
+
+      $$ C = (y - \hat{y})^2 $$
+
+      Intuitively this makes the most sense to look at if we are talking about finding the squared error. However, I prefer the following cost function because the partial derivative is very informing.
+
+      $$ C = \frac{1}{2} (y - \hat{y})^2 $$
+
+      Of which $$ \frac{\partial C}{\partial y} = y - \hat{y}$$
+    </p>
+
+    <p>
+    With having an error defined, we can use that number to adjust the weights and biases! But how? We need to take a look at our friend calculus! We are going to take a look at partial derivatives. If you don't know what partial derivatives are, they are very alike normal derivatives. The difference is: in a partial derivatives there are multiple variables in an equation, but you treat one variable as an actual variable and pretend that the other variables are constant.
+    </p>
+
+    <p>
+      For example,
+      $$f(x, y) = x^2 + y^3$$
+
+      The partial derivate of f with respect to x is: $$\frac{\partial f}{\partial x} = 2x$$
+
+      The partial derivate of f with respect to y is: $$\frac{\partial f}{\partial y} = 3x^2$$
+    </p>
+    <aside>For a more complete but quick introduction, see <a href="https://www.math.hmc.edu/calculus/tutorials/partialdifferentiation/partialdifferentiation.pdf">Harvey Mudd's College Math Tutorial</a>.
+    </aside>
+
+    <h2>Why do we need derivatives?</h2>
+    <p>Derivatives and partial derivatives tell us how a function changes we give a very gentle nudge in either the positive or negative direction. Consider a parabola \(f(x) = x^2\), then \(f'(x) = 2x\).</p>
+
+    <p>
+      Backpropagation is an application of the Chain Rule to neural networks. -- see https://stackoverflow.com/questions/35765607/why-do-we-take-the-derivative-of-the-transfer-function-in-calculating-back-propa
+    </p>
+
+
+    <br /><br /><br /><br /><br />
+
+    <!-- Plotting cost function and gradient descent widget -- also need to include network -->
+    <!-- with id cost-function-graph needs to be put here -->
+      
   </section>
 
 
@@ -193,5 +288,6 @@
   </script>
   <script type="text/javascript" src="simplest-ann.js"></script>
   <script type="text/javascript" src="simplest-ann-sigmoid.js"></script>
+  <script type="text/javascript" src="plotCostFunction.js"></script>
 </body>
 </html>
