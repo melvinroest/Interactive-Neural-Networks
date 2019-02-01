@@ -6,7 +6,11 @@ let ctx = canvas.getContext('2d')
 let width = canvas.width 
 let height = canvas.height 
 
-var f = z => 1 / (1 + Math.exp(-z))
+let sig = z => 1 / (1 + Math.exp(-z))
+let cost = (y, yHat) => {
+  return 0.5 * (sig(y) - yHat) ** 2
+}
+let sigPrime = z => sig(z)*(1-sig(z))
 
 // get logical viewport
 let vp = {
@@ -16,7 +20,7 @@ let vp = {
   },
   max: {
     x: 5,
-    y: 1
+    y: 2
   }
 }
 
@@ -34,9 +38,16 @@ let yPhys = y => height - (y - vp.min.y) / (vp.max.y - vp.min.y) * height
 function drawGraph() {
   ctx.clearRect(0, 0, width, height)
   drawAxes()
-  drawFormula(f)
+  // drawFormula(sig, 0, "purple")
+  console.log('drawFormula(cost, 1, "red")')
+  let desiredValue = 1
+  drawFormula(cost, desiredValue, "red")
+  console.log('drawFormula(cost, 0, "blue")')
+  desiredValue = 0
+  drawFormula(cost, desiredValue, "blue")
+  // drawFormula(sigPrime, 0, "green")
 }
-  
+
 function drawAxes() {
   ctx.save()
   ctx.linewidth = 2
@@ -83,24 +94,27 @@ function createAxisMarkPartY(amountOfMarks, sign){
 // When rendering, xDist determines the horizontal distance between points
 let xDist = (vp.max.x-vp.min.x) / width
 
-document.getElementById("wx").addEventListener('input', () => {
+document.getElementById("wx-c").addEventListener('input', () => {
   drawGraph()
 })
 
-document.getElementById("b").addEventListener('input', () => {
+document.getElementById("b-c").addEventListener('input', () => {
   drawGraph()
 })
 
-function drawFormula(f) {
-  let wx = parseFloat(document.getElementById("wx").value)
-  let b = parseFloat(document.getElementById("b").value)
+function drawFormula(f, desiredValue, color) {
+  let wx = parseFloat(document.getElementById("wx-c").value)
+  let b = parseFloat(document.getElementById("b-c").value)
   ctx.beginPath()
-  ctx.strokeStyle = "red"
+  ctx.strokeStyle = color
   let x = vp.min.x
-  let y = f(wx * x + b)
+  let y = f(wx * x + b, desiredValue)
   ctx.moveTo(xPhys(x), yPhys(y))
   for (x = x + xDist; x <= vp.max.x; x += xDist) {
-    y = f(wx*x+b)
+    if( ((x>0.99 && x < 1.01) ||(x>-0.01 && x < 0.001)) && color === "red"){
+      console.log('x: ', x, wx, b, 'y: ', sig(wx*x+b), 'C: ', f(sig(wx*x+b), desiredValue), 'yHat: ', desiredValue )
+    }
+    y = f(wx*x+b, desiredValue)
     ctx.lineTo(xPhys(x), yPhys(y))
   }
   ctx.stroke()
