@@ -405,25 +405,43 @@ function drawFormula(f) {
   let wx = parseFloat(document.getElementById("simplest-ann-sigmoid-slider-wx").value)
   let xViz = parseFloat(document.getElementById("simplest-ann-sigmoid-slider-x").value)
   let b = parseFloat(document.getElementById("simplest-ann-sigmoid-slider-b").value)
+  
+  // ask help from Gabor
+  // ctxGraph.beginPath()
+  // ctxGraph.strokeStyle = "red"
+  // let z = wx * vp.min.x + b
+  // let y = sig(z)
+  // let zMin = vp.min.x
+  // let zMax = vp.max.x
+  // //ask help from Gabor
+  // if(wx < 0){
+  //   zMax = vp.min.x
+  //   zMin = vp.max.x
+  // }
+  // ctxGraph.moveTo(xPhys(zMin), yPhys(y))
+  // let xDist = 0.01
+  // //ask help for Gabor
+  // for (let x = -20; x <= 20; x += xDist) {
+  //   z = wx * x + b
+  //   y = sig(z)
+  //   ctxGraph.lineTo(xPhys(z), yPhys(y))
+  // }
+  // ctxGraph.stroke()
 
+  // This is the graph with respect to x but not with respect to z!
+  // What are the implications of this?
+  // It means that the x-axis is with respect to the input data and not
+  // the whole activation function.
+  // The activation function with respect to z always remains 1 / 1 + e^-z.
+  let xDist = (vp.max.x-vp.min.x) / width
   ctxGraph.beginPath()
   ctxGraph.strokeStyle = "red"
-  let z = wx * vp.min.x + b
-  let y = sig(z)
-  let zMin = vp.min.x
-  let zMax = vp.max.x
-  //ask help for Gabor
-  if(wx < 0){
-    zMax = vp.min.x
-    zMin = vp.max.x
-  }
-  ctxGraph.moveTo(xPhys(zMin), yPhys(y))
-  let xDist = 0.01
-  //ask help for Gabor
-  for (let x = -20; x <= 20; x += xDist) {
-    z = wx * x + b
-    y = sig(z)
-    ctxGraph.lineTo(xPhys(z), yPhys(y))
+  let x = vp.min.x
+  let y = f(wx * x + b)
+  ctxGraph.moveTo(xPhys(x), yPhys(y))
+  for (x = x + xDist; x <= vp.max.x; x += xDist) {
+    y = f(wx*x+b)
+    ctxGraph.lineTo(xPhys(x), yPhys(y))
   }
   ctxGraph.stroke()
 
@@ -432,7 +450,9 @@ function drawFormula(f) {
   ctxGraph.strokeStyle = "black"
   ctxGraph.beginPath()
   let dotSize = 8
-  ctxGraph.arc(xPhys(activationOnGraph), yPhys(sig(activationOnGraph)), dotSize, 0, Math.PI * 2, true)
+  //x-axis needs to be (activationOnGraph - b) / wx -- that is how you algebraically derived it too.
+  wx = wx === 0? 0.00001 : wx
+  ctxGraph.arc(xPhys( (activationOnGraph - b)/wx), yPhys(sig(activationOnGraph)), dotSize, 0, Math.PI * 2, true)
   ctxGraph.closePath()
   ctxGraph.fill()
   ctxGraph.stroke()
