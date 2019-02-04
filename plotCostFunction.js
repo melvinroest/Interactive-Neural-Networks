@@ -7,20 +7,22 @@ let width = canvas.width
 let height = canvas.height 
 
 let sig = z => 1 / (1 + Math.exp(-z))
+
 let cost = (y, yHat) => {
   return 0.5 * (sig(y) - yHat) ** 2
 }
+
 let sigPrime = z => sig(z)*(1-sig(z))
 
 // get logical viewport
 let vp = {
   min: {
-    x: -5,
+    x: -15,
     y: 0
   },
   max: {
-    x: 5,
-    y: 2
+    x: 0,
+    y: 1
   }
 }
 
@@ -39,13 +41,18 @@ function drawGraph() {
   ctx.clearRect(0, 0, width, height)
   drawAxes()
   // drawFormula(sig, 0, "purple")
-  console.log('drawFormula(cost, 1, "red")')
-  let desiredValue = 1
-  drawFormula(cost, desiredValue, "red")
-  console.log('drawFormula(cost, 0, "blue")')
-  desiredValue = 0
-  drawFormula(cost, desiredValue, "blue")
+  
+  // console.log('drawFormula(cost, 1, "red")')
+  // let desiredValue = 1
+  // drawFormula(cost, desiredValue, "red")
+  // console.log('drawFormula(cost, 0, "blue")')
+  // desiredValue = 0
+  // drawFormula(cost, desiredValue, "green")
+
   // drawFormula(sigPrime, 0, "green")
+
+  drawCostFunction(1, 0, "red")
+  drawCostFunction(0, 1, "blue")
 }
 
 function drawAxes() {
@@ -120,6 +127,62 @@ function drawFormula(f, desiredValue, color) {
   ctx.stroke()
 }
 
+// function drawCostFunction() {
+//   let wx = parseFloat(document.getElementById("wx-c").value)
+//   let b = parseFloat(document.getElementById("b-c").value)
+//   ctx.beginPath()
+//   ctx.strokeStyle = "blue"
+//   let x = vp.min.x
+//   let z = wx * x + b
+//   let y = cost(z,  1) + cost(z, 0) //calculating the cost for if for a fixed x, the desired value would either ba 0 or a 1.
+//   ctx.moveTo(xPhys(x), yPhys(y))
+//   for (x = x + xDist; x <= vp.max.x; x += xDist) {
+//     y = cost(wx * x + b, 1) + cost(wx * x + b, 0)
+//     // if( ((x>0.99 && x < 1.01) ||(x>-0.01 && x < 0.001))){
+//     //   console.log('drawCostFunction: ', 'x: ', x, wx, b, 'y: ', sig(wx*x+b), 'C: ', y, 'yHat: ' )
+//     // }
+//     ctx.lineTo(xPhys(x), yPhys(y))
+//   }
+//   ctx.stroke()
+// }
+
+function drawCostFunction(x, desiredValue, color) {
+  // let wx = parseFloat(document.getElementById("wx-c").value)
+  let b = parseFloat(document.getElementById("b-c").value)
+
+  let xDist = 0.01
+
+  ctx.beginPath()
+  ctx.strokeStyle = color
+  let wx = vp.min.x
+  let z = wx * x + b
+  let y = cost(z,  desiredValue)
+  ctx.moveTo(xPhys(wx), yPhys(y))
+  for (wx = wx + xDist; wx <= vp.max.x; wx += xDist) {
+    z = wx * x + b
+    y = cost(z, desiredValue)
+    if(wx >= -10.02 && wx <= -9.98){
+      // console.log('wx: ', wx, 'y: ', y)
+    }
+    ctx.lineTo(xPhys(wx), yPhys(y))
+  }
+  ctx.stroke()
+}
+
+function costFunctionData(x, desiredValue) {
+
+  let xDist = 0.1
+
+  for (let wx = vp.min.x; wx <= vp.max.x; wx += xDist) {
+    for(let b = vp.min.x; b <= vp.max.x; b += xDist) {
+      let z = wx * x
+      let y = cost(z, desiredValue) 
+    }
+  }
+}
+
 drawGraph()
+
+costFunctionData(1, 0)
 
 })()

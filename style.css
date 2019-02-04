@@ -127,3 +127,10 @@ span.slider{
   left: 290px;
   font-weight: 900;
 }
+
+svg.neuron {
+  position: absolute; 
+  left: 0; 
+  width: 156px; 
+  height: 167px;
+}

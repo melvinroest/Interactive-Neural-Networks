@@ -7,30 +7,6 @@
 <body>
   <section id="content">
 
-    <canvas id="cost-function-graph" width="535" height="300">
-    Canvas not supported in the browser, please install Chrome or Firefox.
-    </canvas>
-    <br />
-    <br />
-    <input type="range" min="-20" max="20" value="-20" step="0.25" class="slider" id="wx-c">\(w\):
-    <span class="slider" id="wx-c-out">1.00</span>
-    <input type="range" min="-20" max="20" value="7" step="0.25" class="slider" id="b-c">b: 
-    <span class="slider" id="b-c-out">0</span>
-    <script>
-      function initCostFunctionSliders(){
-        let wx = document.getElementById('wx-c')
-        let b = document.getElementById('b-c')
-        wx.addEventListener('input', () => {
-          document.getElementById('wx-c-out').innerHTML = wx.value
-        })
-        b.addEventListener('input', () => {
-          document.getElementById('b-c-out').innerHTML = b.value
-        })
-      }
-      initCostFunctionSliders();
-    </script>
-
-
     <h1>An Interactive Guide to the Wonderful World of Neural Networks</h1>
     <p>Hello!</p>
     <p>I gave myself the challenge to learn as much as I could about neural networks within a week. I've noitced process of understanding it could be easy and you could learn what I learned within one to two days of what took me a week, while only knowing high school maths.</p>
@@ -91,12 +67,21 @@
     </aside>
     <div id="playground-simplest-ann">
       <canvas id="simplest-ann" width=400 height=350></canvas>
-        <input type="range" min="0" max="1" value="1" step="0" class="slider" id="simplest-ann-slider-x">
-        <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-b">
-        <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wx">
-        <!-- <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wb"> -->
-        <div id="simplest-ann-input-layer">Input Layer</div>
-        <div id="simplest-ann-output-layer">Output Layer</div>
+      <!-- <svg class="neuron" style="position: absolute; left:15px; top:-10px">
+        <use xlink:href="#neuron-blue"></use>
+      </svg>
+      <svg class="neuron" style="position: absolute; left:265px; top:-10px">
+        <use xlink:href="#neuron-blue"></use>
+      </svg>
+      <svg class="neuron" style="position: absolute; left:15px; top:165px">
+        <use xlink:href="#neuron-blue"></use>
+      </svg> -->
+      <input type="range" min="0" max="1" value="1" step="0" class="slider" id="simplest-ann-slider-x">
+      <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-b">
+      <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wx">
+      <!-- <input type="range" min="-3" max="3" value="1" step="0.25" class="slider" id="simplest-ann-slider-wb"> -->
+      <div id="simplest-ann-input-layer">Input Layer</div>
+      <div id="simplest-ann-output-layer">Output Layer</div>
     </div>
 
     <p>Did you get it? What values did you use? Do you know what process is happening for it to produce a 0 or 1?</p>
@@ -291,8 +276,34 @@
 
     <br /><br /><br /><br /><br />
 
+    <!-- Old cost function visualization, maybe keep it in to cross-compare -->
+    <canvas id="cost-function-graph" width="535" height="300">
+    Canvas not supported in the browser, please install Chrome or Firefox.
+    </canvas>
+    <br />
+    <br />
+    <input type="range" min="-20" max="20" value="1" step="0.25" class="slider" id="wx-c">\(w\):
+    <span class="slider" id="wx-c-out">1.00</span>
+    <input type="range" min="-20" max="20" value="1" step="0.25" class="slider" id="b-c">b: 
+    <span class="slider" id="b-c-out">0</span>
+    <script>
+      function initCostFunctionSliders(){
+        let wx = document.getElementById('wx-c')
+        let b = document.getElementById('b-c')
+        wx.addEventListener('input', () => {
+          document.getElementById('wx-c-out').innerHTML = wx.value
+        })
+        b.addEventListener('input', () => {
+          document.getElementById('b-c-out').innerHTML = b.value
+        })
+      }
+      initCostFunctionSliders();
+    </script>
+
     <!-- Plotting cost function and gradient descent widget -- also need to include network -->
     <!-- with id cost-function-graph needs to be put here -->
+
+    <!-- Backpropagation widget -->
       
   </section>
 
@@ -314,5 +325,60 @@
   <script type="text/javascript" src="simplest-ann.js"></script>
   <script type="text/javascript" src="simplest-ann-sigmoid.js"></script>
   <script type="text/javascript" src="plotCostFunction.js"></script>
+
+
+
+
+
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path d="M114.069576,127.088198 C120.256553,133.919134 124.82584,136.108127 135.722221,145.102941 L125.983549,141.420331 L128.584412,150.579654 C122.354806,142.184644 118.538821,138.269538 117.136457,138.834336 C116.255381,139.189186 117.639312,145.433337 117.303946,150.15313 C116.838636,156.701708 114.776409,162.215609 114.069576,161.971247 C112.853303,161.550764 114.825283,156.121101 112.511962,140.696837 C110.29236,125.897456 98.5308064,113.189229 95.5339512,112.452226 C93.5360478,111.960891 92.0028146,112.289283 90.9342517,113.437401 L86.619111,112.640625 C81.3125786,113.739875 78.5115345,115.589562 78.2159784,118.189688 C77.7726444,122.089876 69.1702365,125.524525 84.4199219,153.793945 C99.6696073,182.063365 81.0737195,153.53138 79.7724609,153.793945 C78.6375523,154.022945 85.3903633,175.797648 77.5380999,159.154297 C69.6858366,142.510946 67.1711512,117.867078 62.0644531,116.260742 C50.2421875,112.541992 43.7542611,123.727131 40.4047939,127.276597 C34.8395317,133.174164 31.267735,139.603441 29.6894037,146.564428 C29.6894037,138.064158 29.1145085,133.463165 27.9647179,132.76145 C26.8149273,132.059735 21.9530994,133.474549 13.3792341,137.005893 C17.7746591,129.213258 28.8359686,128.513585 37.3706625,122.168098 C39.2812919,120.747558 48.5407665,110.759903 46.1729327,107.853523 C41.9230411,102.637026 3.62060547,113.622803 8.2890625,109.291016 C12.9575195,104.959229 15.3289604,103.702036 15.388916,101.578857 C15.4488716,99.4556786 -0.391417928,88.2653107 6.79857859,90.7597656 C14.1396702,93.3066406 17.1907735,99.8548399 27.9647179,99.2226562 C35.0572738,98.8064858 42.7011719,95.1938 42.7011719,90.7597656 C42.7011719,85.7280589 34.7394,83.5414874 21.8876953,78.9975586 C17.7760992,77.543837 10.6408453,74.5523387 0.481933594,70.0230637 C6.90190852,68.3787687 10.1751833,67.1525154 10.3017578,66.3443038 C10.5568288,64.7156085 9.64513228,61.8304255 6.79857859,57.0016113 C8.67869991,57.150704 13.286714,61.5344746 14.1396702,62.8008022 C15.2594462,64.4632593 15.7729955,66.5009977 16.4126804,67.3714821 C17.5396263,68.9050324 21.1524829,76.8640194 27.9647179,75.4282227 C32.5062079,74.4710248 35.3518481,73.0923947 36.5016387,71.2923325 L40.5144283,67.6897812 L45.3626661,68.0938025 C49.7588653,62.4257578 51.9966629,58.2909435 52.0760589,55.6893598 C52.374824,45.8996625 46.1729327,36.7338304 46.1729327,29.5888358 C46.1729327,24.8255062 48.0529339,18.9456252 51.8129363,11.9491931 C51.022536,15.6189476 51.022536,17.856376 51.8129363,18.6614784 C52.6033367,19.4665808 54.7999071,19.4665808 58.4026478,18.6614784 C54.6407345,20.3797318 52.4441641,21.6069364 51.8129363,22.3430922 C50.8660948,23.4473258 51.9461558,49.1102999 54.9738325,54.4675135 C56.9922837,58.0389893 61.4007278,60.42646 68.1991648,61.6299257 L72.0356829,59.3997831 L76.1372095,60.6310488 C81.5543176,58.8653214 85.0843728,57.2073174 86.727375,55.6570368 C92.3257937,50.3745606 86.619111,26.0247059 86.619111,22.3430922 C86.619111,19.888683 83.9127407,14.4873891 78.5,6.13921043 L89.0920515,11.9491931 L98.4884031,0 C93.814324,10.7494621 91.4772845,18.8305701 91.4772845,24.243324 C91.4772845,25.7642817 90.4940425,34.6811102 91.4772845,42.9451021 C92.7525825,53.6637778 96.1757808,64.0812439 97.3606073,64.0696415 C98.5454338,64.0580392 107.425057,56.405833 110.147461,54.4675135 C114.002822,51.7225416 116.776466,43.6992389 121.62344,33.2644238 L119.140906,48.5127253 L131.885903,44.7300209 C124.342144,48.2231141 117.683454,52.3136443 111.909834,57.0016113 C106.136213,61.6895783 98.961649,65.2823277 100.353503,69.4276916 C101.745356,73.5730555 130.624765,63.1910255 134.233792,61.5267859 C137.842818,59.8625462 137.638489,54.1278028 137.842818,54.4899889 C138.99395,56.5304429 136.799042,66.2528136 137.842818,66.3443038 C139.071868,66.4520338 146.759979,61.3700713 149.877932,59.2113843 L139.955336,69.7062524 C140.087413,70.3630252 140.730601,70.8186164 141.884901,71.0730259 C143.039201,71.3274353 148.69839,73.8690466 153.912477,74.3905765 C149.65257,75.2558647 116.086849,69.9611563 112.773547,77.9567556 C109.460245,85.9523548 105.810778,91.6950521 114.847007,96.8552507 C123.883236,102.015449 133.48202,102.139733 138.31219,100.716505 C141.532304,99.7676872 144.151881,96.0658098 148.529429,86.9306037 L145.041686,104.116704 L154.594266,114.20255 C148.931194,110.649349 144.399639,108.470207 140.999603,107.665124 C139.099081,107.215106 123.423156,98.823104 111.909834,106.834541 C100.396511,114.845979 108.297844,120.715728 114.069576,127.088198 Z" id="shape"></path>
+
+        <g id="face" transform="translate(38.000000, 55.000000)">
+          <g id="eye-left" transform="translate(12.333333, 27.461905)">
+              <ellipse id="Oval-4" fill="#000000" cx="7.04761905" cy="6.95238095" rx="7.04761905" ry="6.95238095"></ellipse>
+              <ellipse id="Oval" fill="#FFFFFF" cx="8.45714286" cy="5.90952381" rx="2.46666667" ry="2.43333333"></ellipse>
+              <ellipse id="Oval-Copy" fill="#FFFFFF" cx="3.7" cy="10.602381" rx="1" ry="1"></ellipse>
+          </g>
+          <g id="eye-right" transform="translate(47.571429, 27.461905)">
+              <ellipse id="Oval-4" fill="#000000" cx="7.04761905" cy="6.95238095" rx="7.04761905" ry="6.95238095"></ellipse>
+              <ellipse id="Oval" fill="#FFFFFF" cx="8.45714286" cy="5.90952381" rx="2.46666667" ry="2.43333333"></ellipse>
+              <ellipse id="Oval-Copy" fill="#FFFFFF" cx="3.7" cy="10.602381" rx="1" ry="1"></ellipse>
+          </g>
+          <path d="M31.7251256,44.4952381 C32.4229185,47.0444444 34.18121,48.3190476 37,48.3190476 C39.81879,48.3190476 41.6228497,47.0444444 42.4121791,44.4952381" id="mouth" stroke="#000000" stroke-width="2"></path>
+        </g>
+
+        <g id="neuron-blue">
+          <use fill-rule="evenodd" xlink:href="#shape" fill="#9ADBFF"></use>
+          <use fill="black" fill-opacity="1" filter="url(#filter-blue)" xlink:href="#shape"></use>
+          <use id="after-effect" stroke="#000000" stroke-width="1" xlink:href="#shape" fill="none"></use>
+          <use xlink:href="#face" fill="none" />
+        </g>
+
+        <filter x="-1.9%" y="-1.8%" width="103.9%" height="103.6%" filterUnits="objectBoundingBox" id="filter-blue">
+            <feMorphology radius="2" operator="erode" in="SourceAlpha" result="shadowSpreadInner1"></feMorphology>
+            <feGaussianBlur stdDeviation="1" in="shadowSpreadInner1" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="1" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.373992488   0 0 0 0 0.586802329   0 0 0 0 0.704666241  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <filter x="-2.6%" y="-3.5%" width="106.2%" height="105.3%" filterUnits="objectBoundingBox" id="filter-purple">
+            <feMorphology radius="2" operator="erode" in="SourceAlpha" result="shadowSpreadInner1"></feMorphology>
+            <feGaussianBlur stdDeviation="1" in="shadowSpreadInner1" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="1" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.469173898   0 0 0 0 0.413586505   0 0 0 0 0.709077381  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <filter x="-2.6%" y="-3.5%" width="106.2%" height="105.3%" filterUnits="objectBoundingBox" id="filter-pink">
+            <feMorphology radius="2" operator="erode" in="SourceAlpha" result="shadowSpreadInner1"></feMorphology>
+            <feGaussianBlur stdDeviation="1" in="shadowSpreadInner1" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="1" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 0.838541667   0 0 0 0 0.968849072  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+  </svg>
+
+
 </body>
 </html>
