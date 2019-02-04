@@ -271,23 +271,23 @@ function drawDot(dot) {
 
 // draw tracking dot at xy
 function drawNeuron(opts) {
-    ctx.fillStyle = opts.color
-    ctx.strokeStyle = "black"
-    ctx.lineWidth = 1
-    ctx.beginPath()
-    ctx.arc(opts.x, opts.y, opts.r, 0, Math.PI * 2, false)
-    ctx.closePath()
-    ctx.fill()
-    ctx.stroke()
+    // ctx.fillStyle = opts.color
+    // ctx.strokeStyle = "black"
+    // ctx.lineWidth = 1
+    // ctx.beginPath()
+    // ctx.arc(opts.x, opts.y, opts.r, 0, Math.PI * 2, false)
+    // ctx.closePath()
+    // ctx.fill()
+    // ctx.stroke()
 
-    ctx.font = font
-    ctx.textAlign = "center"
-    ctx.fillStyle = "black"
-    let neuronValue = 0
-    if(opts.initValue) {
-        neuronValue = opts.initValue.toFixed(2)
-    }
-    ctx.fillText(neuronValue, opts.x, opts.y + 10)
+    // ctx.font = font
+    // ctx.textAlign = "center"
+    // ctx.fillStyle = "black"
+    // let neuronValue = 0
+    // if(opts.initValue) {
+    //     neuronValue = opts.initValue.toFixed(2)
+    // }
+    // ctx.fillText(neuronValue, opts.x, opts.y + 10)
 }
 
 function debugRect(x, y, width, height){
