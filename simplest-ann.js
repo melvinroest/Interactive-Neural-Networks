@@ -19,7 +19,7 @@ let numberOfLayers = 3
 //                  input, h1, output
 let layerOffsets = Array(numberOfLayers).fill().map( (v, i) => i * (neuronRadius * 4) + 100 )
                     // n1   n2   n3   n4
-let verticalOffsets = Array(numberOfNeurons).fill().map( (v, i) => (1 + i) * (neuronRadius * 1.5) )
+let verticalOffsets = Array(numberOfNeurons).fill().map( (v, i) => (1 + i) * (neuronRadius * 2.2) )
 
 // other settings
 let layerAnimationCounter = 0
@@ -29,9 +29,7 @@ let font = "24px Baskerville"
 // input layer
 let x1 = {x: layerOffsets[0], y: verticalOffsets[0], r: neuronRadius, color: "#9ADBFF", initValue: 0.5,
 type: "input", weights: [0.25]}
-let b1 = {x: layerOffsets[0], y: verticalOffsets[2], r: neuronRadius, color: "#AD9AFF", initValue: 1.0,
-type: "bias", weights: [1]}
-let l1 = [x1, b1]
+let l1 = [x1]
 
 let y1 = {x: layerOffsets[1], y: verticalOffsets[0], r: neuronRadius, color: "#9AFFBD",
 type: "output", weights: [0.57]}
@@ -79,13 +77,9 @@ function calculate(input, output){
 // the draw loop
 function draw(){
     let simplest_ann_xout = document.getElementById("simplest-ann-slider-x").value
-    let simplest_ann_bout = document.getElementById("simplest-ann-slider-b").value
     let simplest_ann_wxout = document.getElementById("simplest-ann-slider-wx").value
-    // let simplest_ann_wbout = document.getElementById("simplest-ann-slider-wb").value
     x1.initValue = parseFloat(simplest_ann_xout)
     x1.weights[0] = parseFloat(simplest_ann_wxout)
-    b1.initValue = parseFloat(simplest_ann_bout)
-    // b1.weights[0] = parseFloat(simplest_ann_wbout)
 
     //need to draw input neurons for slider changes
     let inputNeurons = allNeurons[0]
@@ -142,7 +136,7 @@ function draw(){
         }
     }
 
-    setTimeout(function () {
+    setTimeout(() => {
         requestAnimationFrame(draw);
     }, 1000 / fps);
 }
@@ -195,20 +189,7 @@ function animateAxon(neurons, weight) {
 
     drawDot(dot)
 
-    //draw weight
-    start.wx = start.x + (end.x - start.x) / 4
-    start.wy = start.y + (end.y - start.y) / 4
-    ctx.beginPath()
-    ctx.rect(start.wx - 25, start.wy - 40, 60, 25)
-    ctx.fillStyle = "white"
-    ctx.fill()
-    ctx.stroke()
-    ctx.closePath()
-
-    ctx.font = font
-    ctx.textAlign = "center"
-    ctx.fillStyle = "black"
-    ctx.fillText(weight, start.wx, start.wy - 20)
+    drawWeight(start, end, weight)
 
     return dot;
     
@@ -234,11 +215,14 @@ function drawAxon(neurons, weight) {
     ctx.strokeStyle = 'black'
     ctx.stroke()
 
-    //draw weight
+    drawWeight(start, end, weight)
+}
+
+function drawWeight(start, end, weight){
     start.wx = start.x + (end.x - start.x) / 4
     start.wy = start.y + (end.y - start.y) / 4
     ctx.beginPath()
-    ctx.rect(start.wx - 25, start.wy - 40, 60, 25)
+    ctx.rect(start.wx, start.wy - 40, 60, 25)
     ctx.fillStyle = "white"
     ctx.fill()
     ctx.stroke()
@@ -247,9 +231,8 @@ function drawAxon(neurons, weight) {
     ctx.font = font
     ctx.textAlign = "center"
     ctx.fillStyle = "black"
-    ctx.fillText(weight, start.wx, start.wy - 20)
+    ctx.fillText(weight, start.wx + 30, start.wy - 20)
 }
-
 
 // draw tracking dot at xy
 function drawDot(dot) {
@@ -280,14 +263,21 @@ function drawNeuron(opts) {
     // ctx.fill()
     // ctx.stroke()
 
-    // ctx.font = font
-    // ctx.textAlign = "center"
-    // ctx.fillStyle = "black"
-    // let neuronValue = 0
-    // if(opts.initValue) {
-    //     neuronValue = opts.initValue.toFixed(2)
-    // }
-    // ctx.fillText(neuronValue, opts.x, opts.y + 10)
+    ctx.beginPath()
+    ctx.rect(opts.x - 25, opts.y + 70, 50, 40)
+    ctx.fillStyle = "white"
+    ctx.closePath()
+    ctx.fill()
+    ctx.stroke()
+
+    ctx.font = font
+    ctx.textAlign = "center"
+    ctx.fillStyle = "black"
+    let neuronValue = 0
+    if(opts.initValue) {
+        neuronValue = opts.initValue.toFixed(2)
+    }
+    ctx.fillText(neuronValue, opts.x, opts.y + 100)
 }
 
 function debugRect(x, y, width, height){
