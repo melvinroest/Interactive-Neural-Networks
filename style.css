@@ -22,6 +22,12 @@ p {
   width: 100%;
 }
 
+h3 > span {
+  display: inline-block;
+  font-size: 1em;
+  font-weight: normal;
+}
+
 aside {
   display: block;
   position: absolute;

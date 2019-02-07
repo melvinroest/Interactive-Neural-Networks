@@ -10,23 +10,19 @@ let fps = 5
 let sig = z => 1 / (1 + Math.exp(-z))
 
 let f = (x) => {
-  return x ** 2
+  return x ** 2 + 6 * x + 9
 }
-
-// more complicated example
-// f(x) -- return x ** 2 - 5 * x + 6
-// f'(x) -- x = x - (2 * x - 5) * eta
 
 let sigPrime = z => sig(z)*(1-sig(z))
 
 // get logical viewport
 let vp = {
   min: {
-    x: -25,
+    x: -15,
     y: -10
   },
   max: {
-    x: 25,
+    x: 5,
     y: 25
   }
 }
@@ -36,7 +32,7 @@ let marks = {
   y: 1
 }
 
-let startingPointGD = -5
+let startingPointGD = -1
 
 // Returns the physical x-coordinate of a logical x-coordinate
 let xPhys = x => (x - vp.min.x) / (vp.max.x - vp.min.x) * width
@@ -111,10 +107,12 @@ function startDrawGradientDescent(){
     ctx.beginPath()
     ctx.strokeStyle = "blue"
     if(y <= 0.001){
-      return;
+      return
     }
     ctx.moveTo(xPhys(x), yPhys(y))
     x = x - 2 * x * eta
+    console.log(`x, eta`)
+    console.log(x, eta)
     y = f(x)
     ctx.lineTo(xPhys(x), yPhys(y))
     ctx.stroke()

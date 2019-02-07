@@ -74,17 +74,9 @@
     <h2>Code your own neural super simple neural network</h2>
     We are going to code the feedforward function of our own neural network. 
 
-      <!-- Thanks to: https://tohtml.com/jScript/   -->
-      <pre style="color:#000000;background:#f1f1f1;">
+    <iframe width="100%" height="300" src="https://jsfiddle.net/mettamage/603fwezu/9/embedded/js,result/dark/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>
 
-      <span style="color:#800000; font-weight:bold; ">let</span> feedforward <span style="color:#808030; ">=</span> <span style="color:#808030; ">(</span>x<span style="color:#808030; ">,</span> w<span style="color:#808030; ">)</span> <span style="color:#808030; ">=</span><span style="color:#808030; ">&gt;</span> <span style="color:#800080; ">{</span>
-        <span style="color:#800000; font-weight:bold; ">return</span> ?
-      <span style="color:#800080; ">}</span>
-
-      feedforward<span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#808030; ">-</span><span style="color:#008c00; ">5</span><span style="color:#808030; ">)</span>
-    </pre>
-
-    <p>The goal is to implement the return statement. Look at the model to see what it should be.</p>
+    <p>The goal is to implement the return statement in JSFiddle. Look at the model to see what it should be.</p>
 
     <h2>Automatically training the weights</h2>
 
@@ -106,18 +98,24 @@
     </p>
 
     <p>
-      More formally this means that there are two topics that need to be discussed:
+      More formally this means that there are three topics that need to be discussed:
       <ol>
-        <li>Defining how to calculate the difference between what is desired and whatever the neural network is doing. This is called the cost or loss function.</li>
-        <li>An algorithm for updating the parameters of the network (in this case only the weight \(w\)) by applying the knowledge that we have from the error. This involves two algorithms: backpropagation and gradient descent.</li>
+        <li>Defining how to calculate the difference between what is desired and whatever the neural network is doing. This is called the loss or <strong>cost function</strong>.</li>
+        <li>An algorithm for updating the parameters of the network (in this case only the weight \(w\)) by finding the lowest value for the cost function. This is called <strong>gradient descent</strong></li>.
+        <li>A specialized form of gradient descent by constantly applying the chain rule. This is called <strong>backpropagation</strong>.</li>
       </ol>
     </p>
 
-    <h3>Cost functions</h3>
+    <h3>
+      Training a Network: Cost Functions 
+      <span class="subtitle">Also known as: knowing how wrong your prediction is</span>
+    </h3>
 
-    <p>Let's start with defining the cost function. The difference between the actual output value of a neuron and the desired value is called the error. For example if the output neuron \(a = 0.2\) and the desired value \(y = 1\), then the error \(e = 0.8 \). Therefore:
-    $$ e = (y - a) $$
+    <p>Let's start with defining the cost function. The difference between the actual output value of a neuron and the desired value is called the error. For example, if the output neuron \(a = 0.2\) and the desired value \(y = 1\), then the error \(e = 0.8 \). Therefore:
+    $$ e = (a - y) \textrm{ and } a = wx $$
     </p>
+
+    <strong>Maybe graphical example here?</strong>
 
 
     <!-- Maybe put in a network to have an error exercise. -->
@@ -125,27 +123,98 @@
     <aside>I will soon explain why we need to calculate partial derivatives, for now, just take it for granted.</aside>
 
     <p>
-      Now that we have the error defined, we can define a cost function. A cost function is simply the same thing as calculating the error, with the difference that it is easy to use when calculating derivatives. The idea of the cost function is the same as calculating an error: it should give us an indication of how much we're wrong. Because of this, cost functions can have different formula's but they intend the same thing: to measure how to minimize the error.
+      Now that we have the error defined, we can define a cost function. A cost function is simply the same thing as calculating the error, with the difference that it is easy to use for calculating derivatives (this is needed for the gradient descent part). The idea of the cost function is the same as calculating an error: <em>it should give us an indication of how much we're wrong</em>. Because of this, there is no one right formula for defining a cost function. It's a mathematicians playground really, they get to do whatever they want as long as it makes sense for (1) knowing how wrong you are and (2) finding a way to become less wrong. In other words, all formula's are intended to minimize some error that we find important to reduce.
 
-      This means that $$ C = (y - a) $$
+      This means that $$ C = (a - y) $$
 
       can be seen as a cost function. It is not a very good one however, we need to calculate the partial derivative of it later and therefore a quadratic function will be more informative. Another one I've seen is this one:
 
       $$ C = (y - a)^2 $$
+    </p>
 
-      Intuitively this makes the most sense to look at if we are talking about finding the squared error. However, I prefer the following cost function because the partial derivative is very informing.
+    <aside><a href="https://duckduckgo.com/?q=cute+baby+animals&t=hk&iax=images&ia=images">This always makes my day</a>, it's just too cute! :3</aside>
+
+    <p>
+      Intuitively this makes the most sense to look at if we are talking about finding the squared error. However, I prefer the following cost function because the partial derivative is cute and I like cute.
 
       $$ C = \frac{1}{2} (y - a)^2 $$
-
-      Of which $$ \frac{\partial C}{\partial y} = y - a$$
     </p>
-    <aside>
-      \(\frac{\partial C}{\partial y} = y - a\) is a simple application of the <a href="https://www.khanacademy.org/math/ap-calculus-ab/ab-differentiation-1-new/ab-2-5/v/power-rule">power rule</a>.
-    </aside>
 
-    <p>This is how the cost function looks graphically. The y-axis is the cost \(C\), the x-axis are possible values for the weight \(w\). The desired value has been set to \(y = 1\) in this graph.</p>
+    <p>This is how the cost function looks graphically for the onlye one training example we have: \(x = 1\). The y-axis is the cost \(C\), the x-axis are possible values for the weight \(w\). The desired value has been set to \(y = -5\) in this graph.</p>
+
+    <canvas id="simplest-cost-function-graph1" width="535" height="350">
+    Canvas not supported in the browser, please install Chrome or Firefox.
+    </canvas>
+
+    <p>From this we can infer that the best weight that matches the desired value as closely as possible is -5 (normally y-values and w-values don't overlap but in this case they're both -5). Woo! It's working! We have an idea of how wrong we are for every weight value for \(w\)!
+    </p> 
+    <p>
+      But how did we see that? Well, we use our eyes and see that \(w = -5\) is simply the lowest point. Computers need to do a similar thing. They somehow need to 'perceive' that \(w = -5\) is the lowest point. One way of doing this is with an algorithm called <em>gradient descent</em>. This is especially handy in a high dimensional space where it is impossible to plot the graph.</p>
+    <aside>Gradient descent informally means descending by partial derivative since gradient means partial derivative.</aside>
+
+
+    <p>
+    With having a cost function defined, we can use that function to calculate the error which helps us to automatically adjust the weight! Currently we are able to do that analytically but in a higher dimensional space we can't do this. One way of doing this is by using gradient descent. There are other algorithms, but gradient descent is a basic algorithm used in many machine learning techniques. So the knowledge transfers quite well to other methods.
+    </p>
+
+    <strong>End with a visualization of what they've learned, summarize and give an exercise of programming their cost function</strong>
+
+    <h3>
+      Training a Network: Gradient Descent
+      <span class="subtitle">Also known as: knowing how to automatically tune your weights so that you're almost always right</span>
+    </h3>
+    <aside>If you want to go downhill, you can also play the game <a href="http://sinerider.com">Sinerider</a>!</aside>
+    <p>Derivatives and partial derivatives tell us how a function changes when we give a very gentle nudge in either the positive or negative direction. Consider a parabola \(f(x) = x^2\) as our hypothetical cost function. Then \(f'(x) = 2x\). If you want to go 'downhill', then all you need to do is slowly subtract \(2x\) with a small value repeatedly. This small value is called the learning rate \(\eta\) (pronounced as eta), so finally you'll need to subtract 
+
+    $$2x\eta$$
+
+    $$\textrm{as such: }x \leftarrow x - 2x\eta$$
+
+    Or in programming terms: <br /> <br />
+
+    <div style="text-align: center";><span style="background:#f1f1f1;"><span style="color:#55c">let</span> x<span style="color:#a05050; font-weight:bold; "> = </span> x - 2 * x * eta</span></div>
+
+    </p>
+
+    <p>
+      Another way to look at it is:
+
+      $$ x \leftarrow x - f'(x) \eta $$
+    </p>
+
+    <aside>I've wondered a for long time as to why this works. In my view: the derivative is the one stop shop answer for the question: what is the <em>fastest change</em> one can make when you have a very small difference for \(x\) such as \(x_1 = 3\) and \(x_2 = 3.0001\)? The answer is: if you can differentiate the function, then the derivative is the fastest change one can make. On your left, you can see this graphically.</aside>
+
+    <p>In the following example this is what we are going to see for the function \(f(x) = x^2\). It will be a very slowed down version of gradient descent. The new function that will be repeatedly recalculated is \(f(x) \leftarrow f(x - 2x\eta)\) and the learning rate \(\eta = 0.01\).</p>
+
+    
+    <canvas id="cost-function-graph-gd" width="535" height="300">
+    Canvas not supported in the browser, please install Chrome or Firefox.
+    </canvas>
+    <button id="gradient-descent-example-play">Play!</button>
+    <input type="range" min="0" max="1" value="0.01" step="0.01" class="slider" id="eta">\(\eta\): 
+    <span class="slider" id="eta-out">0.01</span>
+    <script>
+      function initSliders(){
+        let eta = document.getElementById('eta')
+        eta.addEventListener('input', () => {
+          document.getElementById('eta-out').innerHTML = eta.value
+        })
+      }
+      initSliders();
+    </script>
+
+    <aside>Psst! Try and change \(\eta\) and see what happens. What happens for \(\eta = 0.3, \eta = 0.6, \eta = 0.99 \textrm{ and } \eta = 1 \textrm{?}\) </aside>
+
+    <p>
+      <strong>Give them a JSFiddle exercise to implement gradient descent. And then state the final paragraph</strong>
+    </p>
+
+    <p>So we can just use gradient descent on our previous cost function right? And then we're done! Well, no. It's mathematically a bit more complex because the function isn't as simple as \(x^2\), but if it were as simple as \(x^2\), then yes. Yes, indeed my friend. Unfortunately, that isn't the case. We need to move onward.</p>
+
+
 
     <aside>
+      <!-- Aside of Training a Network: Backpropagation -->
       If you don't know what partial derivatives are, they are very alike normal derivatives. The difference is: in a partial derivatives there are multiple variables in an equation, but you treat one variable as an actual variable and pretend that the other variables are constant. For example,
       $$f(x, y) = x^2 + y^3$$
 
@@ -155,35 +224,92 @@
 
       <br /> <br />
 
-      For a more complete but quick introduction, see <a href="https://www.math.hmc.edu/calculus/tutorials/partialdifferentiation/partialdifferentiation.pdf">Harvey Mudd's College Math Tutorial</a>.
-    </aside>
+      For a more complete but quick introduction, see <a href="https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivatives/v/partial-derivatives-introduction">the video series of Khan Academy</a>.
+  </aside>
 
-    <canvas id="cost-function-graph" width="535" height="300">
-    Canvas not supported in the browser, please install Chrome or Firefox.
-    </canvas>
-
-    <p>From this we can infer that the best weight that matches the desired value as closely as possible is -5. Woo! It's working!</p>
+    <h3>
+      Training a Network: Backpropagation
+      <span class="subtitle">Also known as: constantly applying the chain rule in order to perform gradient descent, but not telling anyone by giving it a fancy name</span>
+    </h3>
 
 
     <p>
-    With having a cost function defined, we can use that number to automatically adjust the weight! But how? We need to take a look at our friend calculus! We are going to take a look at partial derivatives.
+    Fully written the cost function we use is: 
+
+    $$C = \frac{1}{2}(y - a)^2$$
+    $$\textrm{for which: } a = wx$$ 
+    $$\textrm{such that: } C = \frac{1}{2}(y - wx)^2$$ 
+
+    Which looks alike \(x^2\) because something is squared, but it also has more variables in it with all kinds of meanings such as: \(w\), \(x\) and \(y\).
+
+    We want to find the partial derivative of \(C\) with respect to \(w\). Why with respect to \(w\)? Because that's the weight we want to automatically train!
+
+    To differentiatie this function it needs the chain rule because there are secretly 2 functions in need of differentiation.</p> 
+
+
+    <p>The first one is the \(\frac{1}{2}(...)^2\) part which is written as the partial derivative of \(C\) with respect to \(a\) which is \(\frac{\partial C}{\partial a}\).
     </p>
 
-    <h2>Backpropagation and gradient descent</h2>
-    <aside>If you want to go downhill, you can also play the game <a href="http://sinerider.com">Sinerider</a>!</aside>
-    <p>Derivatives and partial derivatives tell us how a function changes we give a very gentle nudge in either the positive or negative direction. Consider a parabola \(f(x) = x^2\), then \(f'(x) = 2x\). If you want to go 'downhill', then all you need to do is slowly subtract \(2x\) with a small value repeatedly. This small value is called the learning rate \(\eta\), so finally you'll need to subtract \(2x\eta\).</p>
+    <p>
+      The second one is the \(wx\) part which is the partial derivative of \(a\) with respect to \(w\) which is \(\frac{\partial a}{\partial w}\).
+    </p>
 
-    <p>In the following example this is what we are going to see for the function \(f(x) = x^2\). It will be a very slowed down version of gradient descent. The new function that will be repeatedly recalculated is \(f_{new}(x) = f(x - 2x\eta)\) and the learning rate \(\eta = 0.01\).</p>
 
-    
+    <p>
+    Combined, it can be written as
 
-    <canvas id="cost-function-graph-gd" width="535" height="300">
+    $$\frac{\partial C}{\partial w} = \frac{\partial C}{\partial a}\frac{\partial a}{\partial w}$$
+
+    Let's take a look at both functions and then find the derivative.
+
+    </p>
+
+    <aside style="margin-top: 0;">
+      \(\frac{\partial C}{\partial y} = (a - y)\) is an application of the  <a href="https://www.khanacademy.org/math/ap-calculus-ab/ab-differentiation-1-new/ab-2-5/v/power-rule">power rule</a> and <a href="https://www.khanacademy.org/math/ap-calculus-ab/ab-differentiation-2-new/ab-3-1a/v/chain-rule-introduction">chain rule</a> such that you need to differentiate:  
+
+      \(\frac{1}{2}(y - a)^2 = \frac{1}{2}(...)^2  \textrm{ which is } 1*(...)^1 = (...) = (y - a)\textrm{.}\)
+      
+      \(\textrm{And } y - a \textrm{ which is } {-1} \textrm{ since } {-a} \textrm{ is } {-1} \textrm{ when differentiated.}\)
+
+      Multiplying it as the chain rule states is: \(-1*(y-a) = (-y - a) = (a - y)\)
+    </aside>
+
+    <p>
+
+    $$C = \frac{1}{2}(y - a)^2, \textrm{ so }  \frac{\partial C}{\partial a} = (a - y)$$
+
+    $$a = wx, \textrm{ and } \frac{\partial a}{\partial w} = x$$
+
+    $$\frac{\partial C}{\partial w} = \frac{\partial C}{\partial a}\frac{\partial a}{\partial w} = (a - y)x$$
+    </p>
+
+    <p>
+      And that is what backpropagation is: finding the partial derivative of \(C\) with respect to all the weights in a network (in this case one). This means you have calculated the gradient (partial derivative) for weight \(w\) by using the chain rule and now you can use the rest of the gradient descent algorithm in order to tune the weight. 
+    </p>
+
+    <p>Here is a graphical example of our particular network for which we have one training example \(x=1\).</p>
+
+    <canvas id="simplest-cost-function-graph2" width="535" height="300">
     Canvas not supported in the browser, please install Chrome or Firefox.
     </canvas>
-    <button id="gradient-descent-example-play">Play!</button>
-
+    <button id="simplest-ann-cost-function-simplest-gd-play">Play!</button>
+    <input type="range" min="0" max="1" value="0.01" step="0.01" class="slider" id="simplest-ann-cost-function-eta">\(\eta\): 
+    <span class="slider" id="simplest-ann-cost-function-eta-out">0.01</span>
+    <script>
+      function initSlidersSimplestCostFunction(){
+        let eta = document.getElementById('simplest-ann-cost-function-eta')
+        eta.addEventListener('input', () => {
+          document.getElementById('simplest-ann-cost-function-eta-out').innerHTML = eta.value
+        })
+      }
+      initSlidersSimplestCostFunction();
+    </script>
 
     <br /><br /><br /><br /><br />
+
+    <p>It is important to note that I have omited many things about neural networks, but this is in essence the nitty gritty overview of how a neural network predicts and trains itself. In the next chapter I will create a network that has an activation function, multiple training examples (2, yes, a 100% increase) and a bias neuron.</p>
+
+    <strong>End with JSFiddle and perhaps an updated visualization of the network?</strong>
 
     <!-- <p>
       Backpropagation is an application of the Chain Rule to neural networks. -- see https://stackoverflow.com/questions/35765607/why-do-we-take-the-derivative-of-the-transfer-function-in-calculating-back-propa
@@ -209,6 +335,10 @@
 
   <script type="text/javascript" src="simplest-ann.js"></script>
   <script type="text/javascript" src="simplest-ann-cost-function.js"></script>
+  <script>
+    simplestCostFunctionGraph('simplest-cost-function-graph1')
+    simplestCostFunctionGraph('simplest-cost-function-graph2', 'simplest-ann-cost-function-eta')
+  </script>
   <script type="text/javascript" src="gradient-descent-example.js"></script>
 
 
